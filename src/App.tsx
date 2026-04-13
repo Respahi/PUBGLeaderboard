@@ -1180,7 +1180,7 @@ function App() {
             }
 
             if (card.type === 'group-setup') {
-              const groupsLocked = tournamentState.status !== 'draft'
+              const groupStructureLocked = tournamentState.status !== 'draft'
 
               return (
                 <section
@@ -1192,8 +1192,8 @@ function App() {
                 >
                   <CardFrame
                     eyebrow="Grup Kurulumu"
-                    title="Grupları oluştur ve başlangıç listesini hazırlamaya başla"
-                    subtitle="Turnuva başladıktan sonra grup yapısı kilitlenir. Başlamadan önce isimleri ve oyuncuları serbestçe düzenleyebilirsiniz."
+                    title="Grupları oluştur ve listeyi düzenle"
+                    subtitle="İsimler ve oyuncular her zaman güncellenebilir. Turnuva başladıktan sonra yalnızca yapısal değişiklikler (grup ekleme/silme) kısıtlanır."
                     {...navigationProps}
                   >
                     <div className="panel-grid">
@@ -1212,9 +1212,9 @@ function App() {
                           <span>Grup Adı</span>
                           <input
                             type="text"
+                            className="pixel-input"
                             value={draftGroupName}
                             onChange={(event) => setDraftGroupName(event.target.value)}
-                            disabled={groupsLocked}
                             placeholder="Ör: Şimşekler"
                           />
                         </label>
@@ -1225,18 +1225,18 @@ function App() {
                             <div className="inline-field" key={`draft-member-${memberIndex}`}>
                               <input
                                 type="text"
+                                className="pixel-input"
                                 value={member}
                                 onChange={(event) =>
                                   handleDraftMemberChange(memberIndex, event.target.value)
                                 }
-                                disabled={groupsLocked}
                                 placeholder={`${memberIndex + 1}. oyuncu`}
                               />
                               <button
                                 className="ghost-button"
                                 onClick={() => removeDraftMemberField(memberIndex)}
                                 type="button"
-                                disabled={groupsLocked || draftMembers.length === 1}
+                                disabled={groupStructureLocked || draftMembers.length === 1}
                               >
                                 Sil
                               </button>
@@ -1249,7 +1249,9 @@ function App() {
                             className="secondary-button"
                             onClick={addDraftMemberField}
                             type="button"
-                            disabled={groupsLocked || draftMembers.length >= MAX_MEMBERS}
+                            disabled={
+                              groupStructureLocked || draftMembers.length >= MAX_MEMBERS
+                            }
                           >
                             Oyuncu Ekle
                           </button>
@@ -1257,7 +1259,7 @@ function App() {
                             className="primary-button"
                             onClick={createGroup}
                             type="button"
-                            disabled={groupsLocked}
+                            disabled={groupStructureLocked}
                           >
                             Grubu Oluştur
                           </button>
@@ -1269,8 +1271,8 @@ function App() {
                           <div>
                             <h3>Mevcut Gruplar</h3>
                             <p>
-                              {groupsLocked
-                                ? 'Turnuva başladı; grup yapısı artık düzenlenemez.'
+                              {groupStructureLocked
+                                ? 'Oyuncu yapısı kilitli; grup isimleri yine de güncellenebilir.'
                                 : 'Turnuvayı başlatmadan önce tüm alanları kontrol edin.'}
                             </p>
                           </div>
@@ -1293,18 +1295,18 @@ function App() {
                                     <span>Grup Adı</span>
                                     <input
                                       type="text"
+                                      className="pixel-input"
                                       value={group.name}
                                       onChange={(event) =>
                                         updateGroupName(group.id, event.target.value)
                                       }
-                                      disabled={groupsLocked}
                                     />
                                   </label>
                                   <button
                                     className="ghost-button ghost-button--danger"
                                     onClick={() => deleteGroup(group.id)}
                                     type="button"
-                                    disabled={groupsLocked}
+                                    disabled={groupStructureLocked}
                                   >
                                     Grubu Sil
                                   </button>
@@ -1315,6 +1317,7 @@ function App() {
                                     <div className="inline-field" key={member.id}>
                                       <input
                                         type="text"
+                                        className="pixel-input"
                                         value={member.name}
                                         onChange={(event) =>
                                           updateGroupMemberName(
@@ -1323,7 +1326,6 @@ function App() {
                                             event.target.value,
                                           )
                                         }
-                                        disabled={groupsLocked}
                                         placeholder="Oyuncu adı"
                                       />
                                       <button
@@ -1332,7 +1334,9 @@ function App() {
                                           removeMemberFromGroup(group.id, member.id)
                                         }
                                         type="button"
-                                        disabled={groupsLocked || group.members.length === 1}
+                                        disabled={
+                                          groupStructureLocked || group.members.length === 1
+                                        }
                                       >
                                         Sil
                                       </button>
@@ -1344,7 +1348,9 @@ function App() {
                                   className="secondary-button secondary-button--small"
                                   onClick={() => addMemberToGroup(group.id)}
                                   type="button"
-                                  disabled={groupsLocked || group.members.length >= MAX_MEMBERS}
+                                  disabled={
+                                    groupStructureLocked || group.members.length >= MAX_MEMBERS
+                                  }
                                 >
                                   Oyuncu Ekle
                                 </button>
@@ -1360,7 +1366,7 @@ function App() {
                         className="primary-button"
                         onClick={startTournament}
                         type="button"
-                        disabled={groupsLocked || tournamentState.groups.length === 0}
+                        disabled={groupStructureLocked || tournamentState.groups.length === 0}
                       >
                         Turnuvaya Başla
                       </button>
@@ -1431,9 +1437,8 @@ function App() {
                                 onDecrement={() =>
                                   nudgeMatchPlacement(card.matchNumber, group.id, -1)
                                 }
-                                disabled={readOnly}
                                 align="end"
-                                invalid={!readOnly && getPlacementValue(match, group.id) <= 0}
+                                invalid={getPlacementValue(match, group.id) <= 0}
                               />
                             </div>
 
@@ -1457,7 +1462,6 @@ function App() {
                                   onDecrement={() =>
                                     nudgeMatchKill(card.matchNumber, group.id, member.id, -1)
                                   }
-                                  disabled={readOnly}
                                   align="start"
                                 />
                               </div>

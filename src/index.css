@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Pixelify+Sans:wght@400..700&display=swap');
 
 :root {
   --bg:
@@ -15,7 +15,7 @@
   --accent-soft: #ffe1a1;
   --shadow-md: 0 16px 34px rgba(0, 0, 0, 0.24);
   --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.3);
-  --pixel: 'Silkscreen', monospace;
+  --pixel: 'Pixelify Sans', sans-serif;
 
   color: var(--text);
   background: var(--bg);
