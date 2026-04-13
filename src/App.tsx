@@ -964,10 +964,11 @@ function App() {
       return
     }
 
-    if ((matchConflicts[matchNumber - 1] ?? []).length > 0) {
+    const conflicts = matchConflicts[matchNumber - 1] ?? []
+    if (conflicts.length > 0) {
       setFlashMessage({
         tone: 'error',
-        text: 'Aynı maçta aynı sıralama birden fazla gruba verilemez.',
+        text: `Çakışan sıralamalar: ${conflicts.join(', ')}. Aynı dereceyi birden fazla gruba vermeden liderlik kartına geçemezsiniz.`,
       })
       return
     }
@@ -1398,12 +1399,6 @@ function App() {
                     subtitle="Her grup için sıralama zorunludur. İlk 10 sıra puan getirir ve aynı derece birden fazla grupta kullanılamaz."
                     {...navigationProps}
                   >
-                    {conflicts.length > 0 && (
-                      <div className="inline-alert inline-alert--error">
-                        Çakışan sıralamalar: {conflicts.join(', ')}. Aynı dereceyi birden
-                        fazla gruba vermeden liderlik kartına geçemezsiniz.
-                      </div>
-                    )}
 
                     <div className="match-groups">
                       {tournamentState.groups.map((group, groupIndex) => {
